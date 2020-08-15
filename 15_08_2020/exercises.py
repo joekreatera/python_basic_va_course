@@ -11,30 +11,21 @@ jugadores y determine quien ganó.
 
 
 """
+def userInput(userNumber):
+    e = int(input(f'Usuario {userNumber}. Dato dado1:')) + int(input(f'Usuario {userNumber}. Dato dado2:'))
+    return e%10
 
-e1 = int(input("Usuario1. Dato dado1:")) + int(input("Usuario1. Dato dado2:"))
-e2 = int(input("Usuario2. Dato dado1:")) + int(input("Usuario2. Dato dado2:"))
-
-d1 = e1%10
-d2 = e2%10
+d1 = userInput(1)
+d2 = userInput(2)
 
 if d1 > d2:
     print(f'Usuario 1 ganó {d1} a {d2}')
 else:
-    print(f'Usuario 2 ganó {d2} a {d1} ')
+    if( d1 == d2):
+        print("Nadie gano.... ")
+    else:
+        print(f'Usuario 2 ganó {d2} a {d1} ')
 
 """
 ----------------------------------------------------------
 """
-
-
-d1 = int(input("Player1. Dado 1: "))
-d12 = int(input("Player1. Dado 2: "))
-d2 = int(input("Player2. Dado 1: "))
-d22 = int(input("Player2. Dado 2: "))
-r1 = d1 + d12 % 10
-r2 = d2 + d22 % 10
-if r1 > r2:
-    print("Gana el Player 1 ")
-else r2 > r1:
-    print("Gana Player 2")
