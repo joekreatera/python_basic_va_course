@@ -10,7 +10,7 @@ class Ball:
         self.ww = w
         self.wh = h
 
-    def updatePos(self):
+    def updatePos(self , left_pad1, right_pad2):
         tx = self.px + self.vx
         ty = self.py + self.vy
 
@@ -43,9 +43,11 @@ class World:
         self.player_pad = Pad(2,w/2, 3)
         self.enemy_pad = Pad(18, w/2, 3)
     def update(self):
-        self.ball.updatePos()
+        self.ball.updatePos(self.player_pad, self.enemy_pad)
         self.player_pad.updatePos(self.ball)
         self.enemy_pad.updatePos(self.ball)
+
+
     def __str__(self):
         return f'---------\nWorld ({self.width}{self.height}):\n{self.ball}\nplayer_pad{self.player_pad} \nenemy_pad:{self.enemy_pad}'
 world = World(20,10)
