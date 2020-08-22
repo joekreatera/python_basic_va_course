@@ -31,11 +31,11 @@ class Orc(Creature):
         super().__init__(l=100,m=5+random()*5, f=12+random()*5)
 
 class Horde:
-    def __init__(self, creature):
-        self.__px = 0
-        self.__py = 0
-        self.__vx = 0
-        self.__vy = 0
+    def __init__(self, creature ,w, h,sx,sy):
+        self.__px = random()*w
+        self.__py = random()*h
+        self.__vx = (-1+2*random())*sx
+        self.__vy = (-1+2*random())*sy
         self.__creatures = []
         self.__creatures.append(creature)
 
@@ -63,17 +63,17 @@ class Middle_Earth:
         self.elves_hordes = []
         self.orcs_hordes = []
 
-        self.elves_hordes.append( Horde(Elf() )  )
-        self.elves_hordes.append( Horde(Elf() )  )
-        self.elves_hordes.append( Horde(Elf() )  )
-        self.elves_hordes.append( Horde(Elf() )  )
-        self.elves_hordes.append( Horde(Elf() )  )
+        self.elves_hordes.append( Horde(Elf(), self.__width, self.__height, 5,5 )  )
+        self.elves_hordes.append( Horde(Elf(), self.__width, self.__height, 5,5 )  )
+        self.elves_hordes.append( Horde(Elf(), self.__width, self.__height, 5,5 )  )
+        self.elves_hordes.append( Horde(Elf(), self.__width, self.__height, 5,5 )  )
+        self.elves_hordes.append( Horde(Elf(), self.__width, self.__height, 5,5 )  )
 
-        self.orcs_hordes.append( Horde(Orc() ) )
-        self.orcs_hordes.append( Horde(Orc() ) )
-        self.orcs_hordes.append( Horde(Orc() ) )
-        self.orcs_hordes.append( Horde(Orc() ) )
-        self.orcs_hordes.append( Horde(Orc() ) )
+        self.orcs_hordes.append( Horde(Orc(), self.__width, self.__height, 3,3 )  )
+        self.orcs_hordes.append( Horde(Orc(), self.__width, self.__height, 3,3 )  )
+        self.orcs_hordes.append( Horde(Orc(), self.__width, self.__height, 3,3 )  )
+        self.orcs_hordes.append( Horde(Orc(), self.__width, self.__height, 3,3 )  )
+        self.orcs_hordes.append( Horde(Orc(), self.__width, self.__height, 3,3 )  )
 
     def update(self):
         # check possible battles
