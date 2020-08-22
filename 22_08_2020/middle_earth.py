@@ -39,28 +39,58 @@ class Horde:
         self.__creatures = []
         self.__creatures.append(creature)
 
+    def updatePos(self, w, h):
+        tx = self.__px + self.__vx
+        ty = self.__py + self.__vy
+
+        if( tx > w or tx < 0 ):
+            self.__vx = self.__vx * -1
+        if( ty > h or ty < 0 ):
+            self.__vy = self.__vy * -1
+
+        self.__px = self.__px + self.__vx
+        self.__py = self.__py + self.__vy
+
+
     def __str__(self):
         cts = ' & '.join(map(str,self.__creatures))
         cts = '{' + cts  + '}'
         return f'x:{self.__px} y:{self.__py} vx:{self.__vx} vy:{self.__vy} c:{cts}'
 class Middle_Earth:
-    def __init__(self):
+    def __init__(self, w, h):
+        self.__width = w
+        self.__height = h
         self.elves_hordes = []
         self.orcs_hordes = []
 
         self.elves_hordes.append( Horde(Elf() )  )
+        self.elves_hordes.append( Horde(Elf() )  )
+        self.elves_hordes.append( Horde(Elf() )  )
+        self.elves_hordes.append( Horde(Elf() )  )
+        self.elves_hordes.append( Horde(Elf() )  )
+
+        self.orcs_hordes.append( Horde(Orc() ) )
+        self.orcs_hordes.append( Horde(Orc() ) )
+        self.orcs_hordes.append( Horde(Orc() ) )
         self.orcs_hordes.append( Horde(Orc() ) )
         self.orcs_hordes.append( Horde(Orc() ) )
 
     def update(self):
         # check possible battles
-        a = 0
+
+        for i in range(0, len(self.elves_hordes) ):
+            self.elves_hordes[i].updatePos( self.__width , self.__height)
+
+        for i in range(0, len(self.orcs_hordes) ):
+            self.orcs_hordes[i].updatePos( self.__width , self.__height)
+
         #move positions of alive hordes
+
     def battle(hordeA, hordeB):
         a = 0
     def __str__(self):
         orcs = ' '.join(map(str , self.orcs_hordes ))
         elves = ' '.join(map(str , self.elves_hordes ))
         return f'World!\nOrcs Hordes:\n{orcs} \nElves hords:\n{elves} '
-world = Middle_Earth()
+world = Middle_Earth(100,100)
 print(world)
