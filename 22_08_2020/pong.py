@@ -17,7 +17,7 @@ class Ball:
         if( ty > self.wh or ty < 0):
             self.vy = self.vy * -1
 
-        if( tx > self.ww or tx < 0):
+        if( tx > self.ww or tx < 0 or tx < left_pad1.px or tx > right_pad2.px ):
             self.vx = self.vx * -1
 
         self.px = self.px + self.vx
@@ -52,6 +52,9 @@ class World:
         return f'---------\nWorld ({self.width}{self.height}):\n{self.ball}\nplayer_pad{self.player_pad} \nenemy_pad:{self.enemy_pad}'
 world = World(20,10)
 
-for i in range(0,40):
+f= open("data.csv","w")
+for i in range(0,140):
     print(world)
     world.update()
+    f.write(f'{world.ball.px},{world.ball.py}\n')
+f.close()
