@@ -92,5 +92,6 @@ class Middle_Earth:
         orcs = ' '.join(map(str , self.orcs_hordes ))
         elves = ' '.join(map(str , self.elves_hordes ))
         return f'World!\nOrcs Hordes:\n{orcs} \nElves hords:\n{elves} '
+
 world = Middle_Earth(100,100)
 print(world)
