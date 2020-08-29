@@ -12,6 +12,9 @@ class Creature:
         return self.magic/20*(1+self.magic_m) + self.force/20*(1+self.force_m) + random()*10
     def get_life(self):
         return self.__life
+    def receive_hit(self, h):
+        if( self.__life > 0)
+            self.__life = self.__life - h
     def get_magic(self):
         return self.__magic
     def get_force(self):
@@ -49,6 +52,10 @@ class Horde:
         return self.__py
 
     def updatePos(self, w, h):
+
+        if self.isBattling :
+            return
+
         tx = self.__px + self.__vx
         ty = self.__py + self.__vy
 
@@ -60,7 +67,23 @@ class Horde:
         self.__px = self.__px + self.__vx
         self.__py = self.__py + self.__vy
 
+    def totalForce(self):
+        force = 0
+        for i in range(0,  len(self.__creatures) ):
+            force = force + self.__creatures[i]
+        return force_m
+
+    def setHit(self, h):
+        for i in range(0,  len(self.__creatures) ):
+            self.__creatures[i].receive_hit(h)
+    def getCreaturesSize(self):
+        return len(self.__creatures)
+
     def doBattle(self):
+        myHit = self.totalForce()
+        otherHit = self.opponent.totalForce()
+        self.opponent.setHit(myHit / self.opponent.getCreaturesSize() )
+        self.setHit(otherHit / self.getCreaturesSize() )
         print(f'battling wth {self.opponent}')
 
     def __str__(self):
