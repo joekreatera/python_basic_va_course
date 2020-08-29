@@ -106,7 +106,8 @@ class Horde:
             self.opponent.opponent = None
             self.opponent = None
 
-        print(f'battling wth {self.opponent} {self.finished} ')
+        if( self.opponent == None):
+            print(f'battling wth {self} {self.opponent} {self.finished} ')
 
     def __str__(self):
         cts = ' & '.join(map(str,self.__creatures))
@@ -157,11 +158,23 @@ class Middle_Earth:
         # check possible battles
         self.checkBattles()
 
+        hordes_to_remove = []
         for i in range(0, len(self.elves_hordes) ):
             self.elves_hordes[i].updatePos( self.__width , self.__height)
+            if(  self.elves_hordes[i].finished  ):
+                hordes_to_remove.append( self.elves_hordes[i] )
 
+        for i in range(0, len( hordes_to_remove ) ):
+            self.elves_hordes.remove( hordes_to_remove[i] )
+
+        hordes_to_remove = []
         for i in range(0, len(self.orcs_hordes) ):
             self.orcs_hordes[i].updatePos( self.__width , self.__height)
+            if(  self.orcs_hordes[i].finished  ):
+                hordes_to_remove.append( self.orcs_hordes[i] )
+
+        for i in range(0, len( hordes_to_remove ) ):
+            self.orcs_hordes.remove( hordes_to_remove[i] )
 
         #move positions of alive hordes
 
