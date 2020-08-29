@@ -28,7 +28,7 @@ class Creature:
 
 class Elf(Creature):
     def __init__(self):
-        super().__init__(l=100,m=10+random()*10, f=5+random()*8)
+        super().__init__(l=100,m=12+random()*8, f=5+random()*8)
 
 class Orc(Creature):
     def __init__(self):
@@ -88,12 +88,15 @@ class Horde:
     def getCreaturesSize(self):
         return len(self.__creatures)
 
+    def getCreatures(self):
+        return self.__creatures
+
     def doBattle(self):
         myHit = self.totalForce()
         otherHit = self.opponent.totalForce()
         self.opponent.setHit(myHit / self.opponent.getCreaturesSize() )
         self.setHit(otherHit / self.getCreaturesSize() )
-
+        print(f' {myHit} vs {otherHit} ')
         if len(self.__creatures) == 0:
             self.finished =True
 
@@ -154,9 +157,58 @@ class Middle_Earth:
                             self.elves_hordes[i].opponent = self.orcs_hordes[j]
                             self.orcs_hordes[j].opponent = self.elves_hordes[i]
 
+    def merge(self , h1, h2):
+        if h1.isBattling and h2.isBattling:
+            return
+
+        listTo = None
+        listFrom = None
+
+        if h1.isBattling and not h2.isBattling:
+            listTo = h1.getCreatures()
+            listFrom = h2.getCreatures()
+            h2.finished = True
+
+        if not h1.isBattling and h2.isBattling:
+            listTo = h2.getCreatures()
+            listFrom = h1.getCreatures()
+            h1.finished = True
+
+        if not h1.isBattling and not h2.isBattling:
+            listTo = h1.getCreatures()
+            listFrom = h2.getCreatures()
+            h2.finished = True
+
+        for c in listFrom:
+            listTo.append(c)
+
+        del listFrom[:]
+        print(f'Merged {listTo} {listFrom} ')
+
+    def checkMerge(self , hordes):
+
+        hordeFrom = 0
+        hordeWith = 1
+        finished = False
+        while ( not finished ):
+                if self.distance ( hordes[hordeFrom] , hordes[hordeWith] ) < self.DISTANCE:
+                    print("Could merge!")
+                    self.merge(hordes[hordeFrom] , hordes[hordeWith])
+
+                hordeWith = hordeWith+1
+                if( hordeWith == len( hordes )):
+                    hordeFrom = hordeFrom + 1
+                    hordeWith = hordeFrom + 1
+                if( hordeFrom == len(hordes)-1 ):
+                    finished = True
+
+
     def update(self):
         # check possible battles
+
         self.checkBattles()
+        self.checkMerge(self.elves_hordes)
+        self.checkMerge(self.orcs_hordes)
 
         hordes_to_remove = []
         for i in range(0, len(self.elves_hordes) ):
