@@ -1,4 +1,5 @@
 from random import random
+from math import sqrt
 
 class Creature:
     def __init__(self, l = 100, m = 0 , f = 0):
@@ -38,6 +39,14 @@ class Horde:
         self.__vy = (-1+2*random())*sy
         self.__creatures = []
         self.__creatures.append(creature)
+        self.opponent = None
+        self.isBattling = False
+
+    def getX(self):
+        return self.__px
+
+    def getY(self):
+        return self.__py
 
     def updatePos(self, w, h):
         tx = self.__px + self.__vx
@@ -51,6 +60,8 @@ class Horde:
         self.__px = self.__px + self.__vx
         self.__py = self.__py + self.__vy
 
+    def doBattle(self):
+        print(f'battling wth {self.opponent}')
 
     def __str__(self):
         cts = ' & '.join(map(str,self.__creatures))
@@ -62,7 +73,7 @@ class Middle_Earth:
         self.__height = h
         self.elves_hordes = []
         self.orcs_hordes = []
-
+        self.DISTANCE = 7
         self.elves_hordes.append( Horde(Elf(), self.__width, self.__height, 5,5 )  )
         self.elves_hordes.append( Horde(Elf(), self.__width, self.__height, 5,5 )  )
         self.elves_hordes.append( Horde(Elf(), self.__width, self.__height, 5,5 )  )
@@ -74,9 +85,32 @@ class Middle_Earth:
         self.orcs_hordes.append( Horde(Orc(), self.__width, self.__height, 3,3 )  )
         self.orcs_hordes.append( Horde(Orc(), self.__width, self.__height, 3,3 )  )
         self.orcs_hordes.append( Horde(Orc(), self.__width, self.__height, 3,3 )  )
+
+    def distance( self , a , b):
+        x1 = a.getX()
+        x2 = b.getX()
+        y1 = a.getY()
+        y2 = b.getY()
+        d = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)
+        return sqrt(d)
+
+    def checkBattles(self):
+        for i in range(0, len(self.elves_hordes) ):
+            if self.elves_hordes[i].isBattling:
+                self.elves_hordes[i].doBattle()
+            else:
+                for j in range(0, len(self.orcs_hordes) ):
+                    if self.distance(self.elves_hordes[i] , self.orcs_hordes[j]) < self.DISTANCE :
+                        print(f'************* Hay tiro {self.elves_hordes[i]} {self.orcs_hordes[j]}')
+                        if not self.elves_hordes[i].isBattling:
+                            self.elves_hordes[i].isBattling = True
+                            self.orcs_hordes[j].isBattling = True
+                            self.elves_hordes[i].opponent = self.orcs_hordes[j]
+                            self.orcs_hordes[j].opponent = self.elves_hordes[i]
 
     def update(self):
         # check possible battles
+        self.checkBattles()
 
         for i in range(0, len(self.elves_hordes) ):
             self.elves_hordes[i].updatePos( self.__width , self.__height)
@@ -95,3 +129,5 @@ class Middle_Earth:
 
 world = Middle_Earth(100,100)
 print(world)
+world.update()
+world.update()
