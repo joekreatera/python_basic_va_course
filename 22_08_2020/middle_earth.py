@@ -9,11 +9,11 @@ class Creature:
         self.__magic_m = 0
         self.__force_m = 0
     def getStrength(self):
-        return self.magic/20*(1+self.magic_m) + self.force/20*(1+self.force_m) + random()*10
+        return self.__magic/20*(1+self.__magic_m) + self.__force/20*(1+self.__force_m) + random()*10
     def get_life(self):
         return self.__life
     def receive_hit(self, h):
-        if( self.__life > 0)
+        if( self.__life > 0):
             self.__life = self.__life - h
     def get_magic(self):
         return self.__magic
@@ -44,6 +44,7 @@ class Horde:
         self.__creatures.append(creature)
         self.opponent = None
         self.isBattling = False
+        self.finished = False
 
     def getX(self):
         return self.__px
@@ -70,12 +71,20 @@ class Horde:
     def totalForce(self):
         force = 0
         for i in range(0,  len(self.__creatures) ):
-            force = force + self.__creatures[i]
-        return force_m
+            force = force + self.__creatures[i].get_force()
+        return force
 
     def setHit(self, h):
+        to_erase = []
         for i in range(0,  len(self.__creatures) ):
             self.__creatures[i].receive_hit(h)
+
+            if (self.__creatures[i].get_life() <= 0):
+                to_erase.append(self.__creatures[i])
+
+        for i in range(0,  len(to_erase) ):
+            self.__creatures.remove(to_erase[i])
+
     def getCreaturesSize(self):
         return len(self.__creatures)
 
@@ -84,7 +93,20 @@ class Horde:
         otherHit = self.opponent.totalForce()
         self.opponent.setHit(myHit / self.opponent.getCreaturesSize() )
         self.setHit(otherHit / self.getCreaturesSize() )
-        print(f'battling wth {self.opponent}')
+
+        if len(self.__creatures) == 0:
+            self.finished =True
+
+        if self.opponent.getCreaturesSize()  == 0:
+            self.opponent.finished =True
+
+        if self.finished or self.opponent.finished:
+            self.isBattling = False
+            self.opponent.isBattling = False
+            self.opponent.opponent = None
+            self.opponent = None
+
+        print(f'battling wth {self.opponent} {self.finished} ')
 
     def __str__(self):
         cts = ' & '.join(map(str,self.__creatures))
@@ -152,5 +174,21 @@ class Middle_Earth:
 
 world = Middle_Earth(100,100)
 print(world)
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
+world.update()
 world.update()
 world.update()
