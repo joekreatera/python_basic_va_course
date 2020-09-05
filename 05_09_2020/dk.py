@@ -4,7 +4,10 @@ from panda3d.core import Point3
 from panda3d.core import Vec4
 from panda3d.core import OrthographicLens
 from panda3d.core import loadPrcFileData
-
+from panda3d.core import CollisionBox
+from panda3d.core import CollisionNode
+from panda3d.core import CollisionTraverser
+from panda3d.core import CollisionHandlerEvent
 
 # loadPrcFileData("", "want-directtools #t")
 # loadPrcFileData("", "want-tk #t")
@@ -67,6 +70,33 @@ class DKApp(ShowBase):
             return 1
 
         return 0
+    def setupCollision(self):
+        base.cTrav = CollisionTraverser()
+        self.collisionHandlerEvent = CollisionHandlerEvent()
+        self.collisionHandlerEvent.addInPattern('into-%in')
+        self.collisionHandlerEvent.addOutPattern('outof-%in')
+
+        hitBox = CollisionBox(  Point3(7,0,-4.5) , 0.5,5,0.5)
+        cnodePath = self.player.attachNewNode( CollisionNode('marioHitBox') )
+        cnodePath.node().addSolid(hitBox)
+        cnodePath.show()
+        base.cTrav.addCollider(cnodePath, self.collisionHandlerEvent)
+
+        stairs1 =  self.scene.find("root/bottomstair")
+        hitBox = CollisionBox(  Point3(-6.8,0,-3.0) , 0.5,5,2.5)
+        cnodePath = stairs1.attachNewNode( CollisionNode('stairsHitBox') )
+        cnodePath.node().addSolid(hitBox)
+        cnodePath.show()
+
+        self.accept('into-stairsHitBox', self.enableStair)
+        self.accept('outof-stairsHitBox', self.disableStair)
+        base.cTrav.showCollisions(self.render)
+
+    def enableStair(self, evt):
+        print(f'{evt}')
+
+    def disableStair(self, evt):
+        print(f'{evt}')
 
     def setup(self, task):
         lens = OrthographicLens()
@@ -77,19 +107,21 @@ class DKApp(ShowBase):
         node.remove()
 
         self.player = self.scene.find("root/mario")
-
+        self.setupCollision()
         return Task.done
 
     def update(self,task):
         self.camera.setPos(0,35,0)
         self.camera.lookAt(self.scene)
         # print(f'{globalClock.getDt()}')
-        jy = 0
 
+        jy = 0  # jump Y/Z
+        vi = 4 # initial velocity
+        g = -5 # gravity
         if self.jumping:
             self.jumpTime = self.jumpTime + globalClock.getDt()
-            jy = 8*self.jumpTime  + 0.5*(-9)*self.jumpTime*self.jumpTime
-            vy = 8 + (-9)*self.jumpTime
+            jy = vi*self.jumpTime  + 0.5*g*self.jumpTime*self.jumpTime
+            vy = vi + g*self.jumpTime
             if vy < 0 and abs(jy) < 0.2: # eventually jy substraction will change for the original y(aka Z) mario had
                 self.jumpTime = 0
                 self.jumping = False
@@ -99,11 +131,12 @@ class DKApp(ShowBase):
                 self.jumping = True
                 self.jumpTime = 0.01
 
-
-        self.player.setPos( self.player.getX()+self.getHorizontalAxis()*-.2 , 0, jy   )
-
+        # stop advancing if jumping!
+        adv = self.getHorizontalAxis()*-.2
+        if self.jumping :
+            adv = 0
+        self.player.setPos( self.player.getX()+adv , 0, jy   )
         return Task.cont
-
 
 dk = DKApp()
 dk.run()
