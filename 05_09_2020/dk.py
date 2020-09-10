@@ -86,6 +86,8 @@ class DKApp(ShowBase):
         hitBox = CollisionBox(  Point3(-6.8,0,-3.0) , 0.5,5,2.5)
         cnodePath = stairs1.attachNewNode( CollisionNode('stairsHitBox') )
         cnodePath.node().addSolid(hitBox)
+
+
         cnodePath.show()
 
         self.accept('into-stairsHitBox', self.enableStair)
