@@ -100,6 +100,7 @@ class DKGame(ShowBase):
         self.scene.find("root/rightWall").reparentTo(self.scene)
 
         self.scene.find("root/MainGroup").reparentTo(self.scene)
+        self.scene.find("root/hammer1").reparentTo(self.scene)
 
         self.barrel = self.scene.find("barrel")
         self.barrel.setPos(self.scene, 0,0,0)
@@ -198,8 +199,11 @@ class DKGame(ShowBase):
         stairs3 =  self.scene.find("topstair")
         self.setupBoxCollider(stairs3, -6.8,0, 3.1, 0.5,5,2.2, 'stairs3HitBox', self.collisionHandlerEvent, stairsCollisionMask,stairsCollisionMask  )
 
-        hammer =  self.scene.find("MainGroup")
+        hammer =  self.scene.find("MainGroup") # hammer
         self.setupBoxCollider(hammer, 5.5,0, -1.5, 0.5,5,0.5, 'hammer1HitBox', self.collisionHandlerEvent, stairsCollisionMask,stairsCollisionMask  )
+
+        dk =  self.scene.find("hammer1")
+        self.setupBoxCollider(dk, 8.7,0, 5, 1,5,1, 'dkHitBox', self.collisionHandlerEvent, stairsCollisionMask,stairsCollisionMask  )
 
         floor0 =  self.scene.find("floor0")
         self.setupBoxCollider(floor0, -2.5,0,-5.5, 10,5,0.5, 'floor0HitBox', self.collisionHandlerEvent , intoCollisionMask=segmentCollisionMask )
@@ -234,6 +238,7 @@ class DKGame(ShowBase):
         self.accept('into-stairs3HitBox', self.enableStair)
         self.accept('outof-stairs3HitBox', self.disableStair)
         self.accept('into-hammer1HitBox', self.enableHammer)
+        self.accept('into-dkHitBox', self.dkArrived)
 
         self.accept('into-floor0HitBox', self.enableJump)
         self.accept('outof-floor0HitBox', self.disableJump)
@@ -249,6 +254,15 @@ class DKGame(ShowBase):
         self.accept("into-barrelCollider", self.barrelCrash)
 
         base.cTrav.showCollisions(self.render)
+
+    def dkArrived(self,evt):
+        if(self.hammer):
+            self.scene.node().removeChild(evt.getIntoNodePath().node().getParent(0))
+        else:
+            self.floorValidPosition = 0
+            self.mario.setPos(self.scene, self.marioInitialPos)
+            text = DirectLabel(text="Game Over", text_scale=(0.5,0.5))
+
 
     def enableHammer(self, evt):
         print(f"{evt.getIntoNodePath()}{evt.getFromNodePath()}")
@@ -289,7 +303,7 @@ class DKGame(ShowBase):
 
             if(  self.lifes < 0):
                 print("game over dude!!")
-
+                text = DirectLabel(text="Game Over", text_scale=(0.5,0.5))
 
     def enableStair(self, evt):
         print("crashed mario and stair");
