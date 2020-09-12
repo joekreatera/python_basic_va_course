@@ -99,7 +99,7 @@ class DKGame(ShowBase):
         self.scene.find("root/walls").reparentTo(self.scene)
         self.scene.find("root/rightWall").reparentTo(self.scene)
 
-        self.scene.find("root/hammer1").reparentTo(self.scene)
+        self.scene.find("root/MainGroup").reparentTo(self.scene)
 
         self.barrel = self.scene.find("barrel")
         self.barrel.setPos(self.scene, 0,0,0)
@@ -198,7 +198,7 @@ class DKGame(ShowBase):
         stairs3 =  self.scene.find("topstair")
         self.setupBoxCollider(stairs3, -6.8,0, 3.1, 0.5,5,2.2, 'stairs3HitBox', self.collisionHandlerEvent, stairsCollisionMask,stairsCollisionMask  )
 
-        hammer =  self.scene.find("hammer1")
+        hammer =  self.scene.find("MainGroup")
         self.setupBoxCollider(hammer, 5.5,0, -1.5, 0.5,5,0.5, 'hammer1HitBox', self.collisionHandlerEvent, stairsCollisionMask,stairsCollisionMask  )
 
         floor0 =  self.scene.find("floor0")
@@ -250,7 +250,9 @@ class DKGame(ShowBase):
 
         base.cTrav.showCollisions(self.render)
 
-    def enableHammer():
+    def enableHammer(self, evt):
+        print(f"{evt.getIntoNodePath()}{evt.getFromNodePath()}")
+        self.scene.node().removeChild(evt.getIntoNodePath().node().getParent(0))
         self.hammer = True
 
     def changeBarrelDirection(self, evt):
@@ -277,11 +279,13 @@ class DKGame(ShowBase):
 
 
         if( other == self.mario.node() ):
-            self.lifes = self.lifes - 1
+            if not self.hammer:
+                self.lifes = self.lifes - 1
+                self.floorValidPosition = 0
+                self.mario.setPos(self.scene, self.marioInitialPos)
+
             p = parents[0]
             self.scene.node().removeChild(p)
-            self.floorValidPosition = 0
-            self.mario.setPos(self.scene, self.marioInitialPos)
 
             if(  self.lifes < 0):
                 print("game over dude!!")
@@ -396,7 +400,6 @@ class DKGame(ShowBase):
             self.marioInitialPos = self.mario.getPos()
             self.posNotInitialized = False
 
-        print( f'{self.mario.getPos()} {self.mario.getPos(self.render)} {self.mario.getPos(self.scene)} ')
         self.barrelTimer = self.barrelTimer + globalClock.getDt()
         if self.barrelTimer > (3 + random()*2):
             self.createBarrel()
