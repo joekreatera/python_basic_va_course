@@ -6,6 +6,9 @@ class InputManager:
     space = "space"
     keyA = "a"
     keyS = "s"
+    keyV = "v"
+    keyX = "x"
+
 
     instance = None
 
@@ -15,9 +18,10 @@ class InputManager:
         InputManager.instance = InputManager()
 
         for i in list:
-            evt = "raw-" + i
-            app.accept( evt, InputManager.createInputFunction(evt, InputManager.instance, True)  )
-            app.accept( evt + "-up",  InputManager.createInputFunction(evt, InputManager.instance, False) )
+            evt = i
+            InputManager.instance.setInput(evt , False)
+            app.accept( "raw-" + evt, InputManager.createInputFunction(evt, InputManager.instance, True)  )
+            app.accept( "raw-" + evt + "-up",  InputManager.createInputFunction(evt, InputManager.instance, False) )
 
     @staticmethod
     def createInputFunction(evt, inputManagerObject, down=True):
@@ -26,14 +30,12 @@ class InputManager:
             inputManagerObject.setInput(evt, down)
         return receiveInput
 
+    @staticmethod
+    def isInputDown(inp):
+        return InputManager.instance.getInput(inp)
+
     def __init__(self):
         self.input = {}
-
-    def acceptInput(self):
-        print("input accepted")
-
-    def acceptUpInput(self):
-        print("UP input accepted")
 
     def getInput(self, input):
         return self.input[input]

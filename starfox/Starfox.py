@@ -22,13 +22,6 @@ class Starfox(ShowBase):
         self.collisionHandlerEvent.addInPattern('into-%in')
         self.collisionHandlerEvent.addOutPattern('outof-%in')
 
-        self.accept('into-collision_enemy' , self.crash )
-        self.accept('into-collision_player' , self.crash )
-        self.accept('into-collision_plane', self.crash )
-
-        base.cTrav.addCollider( self.scene.find("player/collision**"), self.collisionHandlerEvent)
-        base.cTrav.addCollider( self.scene.find("enemy1/collision**"), self.collisionHandlerEvent)
-        base.cTrav.addCollider( self.scene.find("basePlane/collision**"), self.collisionHandlerEvent)
 
         self.player = self.scene.find("player")
         self.player.setPythonTag("ObjectController" , Player(self.player) )
@@ -36,6 +29,13 @@ class Starfox(ShowBase):
         self.camera.setPos(self.render, 0,-50,10)
         self.taskMgr.add(self.update , "update")
 
+        self.accept('into-collision_enemy' , self.crash )
+        self.accept('into-collision_player' , self.player.getPythonTag("ObjectController").collisionEnter )
+        self.accept('into-collision_plane', self.crash )
+
+        base.cTrav.addCollider( self.scene.find("player/collision**"), self.collisionHandlerEvent)
+        base.cTrav.addCollider( self.scene.find("enemy1/collision**"), self.collisionHandlerEvent)
+        base.cTrav.addCollider( self.scene.find("basePlane/collision**"), self.collisionHandlerEvent)
         base.cTrav.showCollisions(self.render)
 
         InputManager.initWith(self, [
@@ -45,7 +45,9 @@ class Starfox(ShowBase):
             InputManager.arrowLeft,
             InputManager.keyS,
             InputManager.keyA,
-            InputManager.space
+            InputManager.space,
+            InputManager.keyX,
+            InputManager.keyV
             ] )
 
     def crash(self,evt):
