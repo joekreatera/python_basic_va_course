@@ -3,9 +3,10 @@ from direct.task import Task
 from panda3d.core import CollisionTraverser, CollisionHandlerEvent
 from panda3d.core import loadPrcFileData
 from Player import Player
+from InputManager import InputManager
 
-#loadPrcFileData("", "want-directtools #t")
-#loadPrcFileData("", "want-tk #t")
+loadPrcFileData("", "want-directtools #t")
+loadPrcFileData("", "want-tk #t")
 
 
 class Starfox(ShowBase):
@@ -36,6 +37,16 @@ class Starfox(ShowBase):
         self.taskMgr.add(self.update , "update")
 
         base.cTrav.showCollisions(self.render)
+
+        InputManager.initWith(self, [
+            InputManager.arrowUp,
+            InputManager.arrowDown,
+            InputManager.arrowRight,
+            InputManager.arrowLeft,
+            InputManager.keyS,
+            InputManager.keyA,
+            InputManager.space
+            ] )
 
     def crash(self,evt):
         print(f"{evt}")
