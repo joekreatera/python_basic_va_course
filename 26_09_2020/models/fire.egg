@@ -1,0 +1,176 @@
+<CoordinateSystem> { Z-Up }
+
+<Comment> {
+  "obj2egg '.\models\fire.obj' '.\models\fire.egg'"
+}
+<VertexPool> vpool {
+  <Vertex> 0 {
+    -0.360779 -0.5 0
+    <UV> { 0.19206 0.542554 }
+    <Normal> { 0 0 1 }
+  }
+  <Vertex> 1 {
+    0.360779 -0.5 0
+    <UV> { 0.226797 0.542554 }
+    <Normal> { 0 0 1 }
+  }
+  <Vertex> 2 {
+    0.360779 0.5 0
+    <UV> { 0.226797 0.583402 }
+    <Normal> { 0 0 1 }
+  }
+  <Vertex> 3 {
+    -0.360779 0.5 0
+    <UV> { 0.19206 0.583402 }
+    <Normal> { 0 0 1 }
+  }
+  <Vertex> 4 {
+    -0.5 -0.5 -0.032704
+    <UV> { 0.375 0 }
+    <Normal> { 0 0 1 }
+  }
+  <Vertex> 5 {
+    0.5 -0.5 -0.032704
+    <UV> { 0.625 0 }
+    <Normal> { 0 0 1 }
+  }
+  <Vertex> 6 {
+    0.5 0.5 -0.032704
+    <UV> { 0.625 0.25 }
+    <Normal> { 0 0 1 }
+  }
+  <Vertex> 7 {
+    -0.5 0.5 -0.032704
+    <UV> { 0.375 0.25 }
+    <Normal> { 0 0 1 }
+  }
+  <Vertex> 8 {
+    -0.5 0.5 -0.032704
+    <UV> { 0.375 0.25 }
+    <Normal> { 0 1 0 }
+  }
+  <Vertex> 9 {
+    0.5 0.5 -0.032704
+    <UV> { 0.625 0.25 }
+    <Normal> { 0 1 0 }
+  }
+  <Vertex> 10 {
+    0.5 0.5 -0.199602
+    <UV> { 0.625 0.5 }
+    <Normal> { 0 1 0 }
+  }
+  <Vertex> 11 {
+    -0.5 0.5 -0.199602
+    <UV> { 0.375 0.5 }
+    <Normal> { 0 1 0 }
+  }
+  <Vertex> 12 {
+    -0.5 0.5 -0.199602
+    <UV> { 0.375 0.5 }
+    <Normal> { 0 0 -1 }
+  }
+  <Vertex> 13 {
+    0.5 0.5 -0.199602
+    <UV> { 0.625 0.5 }
+    <Normal> { 0 0 -1 }
+  }
+  <Vertex> 14 {
+    0.5 -0.5 -0.199602
+    <UV> { 0.625 0.75 }
+    <Normal> { 0 0 -1 }
+  }
+  <Vertex> 15 {
+    -0.5 -0.5 -0.199602
+    <UV> { 0.375 0.75 }
+    <Normal> { 0 0 -1 }
+  }
+  <Vertex> 16 {
+    -0.5 -0.5 -0.199602
+    <UV> { 0.375 0.75 }
+    <Normal> { 0 -1 0 }
+  }
+  <Vertex> 17 {
+    0.5 -0.5 -0.199602
+    <UV> { 0.625 0.75 }
+    <Normal> { 0 -1 0 }
+  }
+  <Vertex> 18 {
+    0.5 -0.5 -0.032704
+    <UV> { 0.625 1 }
+    <Normal> { 0 -1 0 }
+  }
+  <Vertex> 19 {
+    -0.5 -0.5 -0.032704
+    <UV> { 0.375 1 }
+    <Normal> { 0 -1 0 }
+  }
+  <Vertex> 20 {
+    0.5 -0.5 -0.032704
+    <UV> { 0.625 0 }
+    <Normal> { 1 0 0 }
+  }
+  <Vertex> 21 {
+    0.5 -0.5 -0.199602
+    <UV> { 0.875 0 }
+    <Normal> { 1 0 0 }
+  }
+  <Vertex> 22 {
+    0.5 0.5 -0.199602
+    <UV> { 0.875 0.25 }
+    <Normal> { 1 0 0 }
+  }
+  <Vertex> 23 {
+    0.5 0.5 -0.032704
+    <UV> { 0.625 0.25 }
+    <Normal> { 1 0 0 }
+  }
+  <Vertex> 24 {
+    -0.5 -0.5 -0.199602
+    <UV> { 0.125 0 }
+    <Normal> { -1 0 0 }
+  }
+  <Vertex> 25 {
+    -0.5 -0.5 -0.032704
+    <UV> { 0.375 0 }
+    <Normal> { -1 0 0 }
+  }
+  <Vertex> 26 {
+    -0.5 0.5 -0.032704
+    <UV> { 0.375 0.25 }
+    <Normal> { -1 0 0 }
+  }
+  <Vertex> 27 {
+    -0.5 0.5 -0.199602
+    <UV> { 0.125 0.25 }
+    <Normal> { -1 0 0 }
+  }
+}
+<Group> root {
+  <Group> default {
+  }
+  <Group> pPlane1 {
+    <Polygon> {
+      <VertexRef> { 0 1 2 3 <Ref> { vpool } }
+    }
+  }
+  <Group> pCube1 {
+    <Polygon> {
+      <VertexRef> { 4 5 6 7 <Ref> { vpool } }
+    }
+    <Polygon> {
+      <VertexRef> { 8 9 10 11 <Ref> { vpool } }
+    }
+    <Polygon> {
+      <VertexRef> { 12 13 14 15 <Ref> { vpool } }
+    }
+    <Polygon> {
+      <VertexRef> { 16 17 18 19 <Ref> { vpool } }
+    }
+    <Polygon> {
+      <VertexRef> { 20 21 22 23 <Ref> { vpool } }
+    }
+    <Polygon> {
+      <VertexRef> { 24 25 26 27 <Ref> { vpool } }
+    }
+  }
+}
