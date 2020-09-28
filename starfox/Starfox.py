@@ -19,6 +19,9 @@ class Starfox(ShowBase):
         self.collisionHandlerEvent = CollisionHandlerEvent()
         base.enableParticles()
 
+        base.messenger.toggleVerbose()
+
+        self.collisionHandlerEvent.addInPattern('from-%in')
         self.collisionHandlerEvent.addInPattern('into-%in')
         self.collisionHandlerEvent.addOutPattern('outof-%in')
 
@@ -31,6 +34,7 @@ class Starfox(ShowBase):
 
         self.accept('into-collision_enemy' , self.crash )
         self.accept('into-collision_player' , self.player.getPythonTag("ObjectController").collisionEnter )
+        self.accept('from-collision_player' , self.player.getPythonTag("ObjectController").collisionEnter )
         self.accept('into-collision_plane', self.crash )
 
         base.cTrav.addCollider( self.scene.find("player/collision**"), self.collisionHandlerEvent)
