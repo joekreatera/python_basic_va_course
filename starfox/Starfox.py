@@ -65,7 +65,8 @@ class Starfox(ShowBase):
         self.player.setPos(self.rails,0,20,0)
 
     def crash(self,evt):
-        print(f"{evt}")
+        a = 2
+        #print(f"{evt}")
 
     def update(self, task):
         extraX, extraZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() )
@@ -79,6 +80,12 @@ class Starfox(ShowBase):
         if InputManager.isInputDown(InputManager.space):
             b = Bullet(self.render, self.player.getPos(self.render) , self.enemy , base.cTrav, self.collisionHandlerEvent)
 
+        bullets = self.render.findAllMatches("bullet")
+
+        for i in bullets:
+            b = i.getPythonTag('ObjectController')
+            b.update( globalClock.getDt())
+            
         return Task.cont
 fox = Starfox()
 fox.run()

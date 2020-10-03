@@ -6,6 +6,13 @@ class Bullet:
         self.gameObject.setPos(world , pos)
         cTrav.addCollider( self.gameObject.find("**collision*"), collisionHandler )
         self.vel = LVector3(0,0,0)
+        self.gameObject.setPythonTag("ObjectController" , self )
+        self.world = world
+        self.gameObject.setName("bullet")
 
-    def crash(evt):
+    def update(self ,dt ):
+        print("update ")
+        self.gameObject.setPos(self.world , 0,0,0)
+
+    def crash(self, evt):
         print("crash bullet")
