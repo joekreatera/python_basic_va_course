@@ -5,9 +5,10 @@ from panda3d.core import loadPrcFileData
 from Player import Player
 from InputManager import InputManager
 from Path import Path
+from Bullet import Bullet
 
-loadPrcFileData("", "want-directtools #t")
-loadPrcFileData("", "want-tk #t")
+#loadPrcFileData("", "want-directtools #t")
+#loadPrcFileData("", "want-tk #t")
 
 
 class Starfox(ShowBase):
@@ -28,6 +29,7 @@ class Starfox(ShowBase):
 
 
         self.player = self.scene.find("player")
+        self.enemy   = self.scene.find("enemy1")
         self.player.setPythonTag("ObjectController" , Player(self.player) )
         #self.player.setPos(self.scene, 0,0,5)
         self.camera.setPos(self.render, 0,-50,100)
@@ -73,6 +75,10 @@ class Starfox(ShowBase):
         self.rails.setHpr( Path.getHeading(self.rails_y) , 0, 0 )
         self.camera.setPos(self.rails , extraX, -10, extraZ)
         self.rails_y = self.rails_y + 20*globalClock.getDt()
+
+        if InputManager.isInputDown(InputManager.space):
+            b = Bullet(self.render, self.player.getPos(self.render) , self.enemy , base.cTrav, self.collisionHandlerEvent)
+
         return Task.cont
 fox = Starfox()
 fox.run()
