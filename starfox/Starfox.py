@@ -7,9 +7,24 @@ from InputManager import InputManager
 from Path import Path
 from Bullet import Bullet
 from panda3d.core import Vec3
-#loadPrcFileData("", "want-directtools #t")
-#loadPrcFileData("", "want-tk #t")
 
+loadPrcFileData("", "want-directtools #t")
+loadPrcFileData("", "want-tk #t")
+
+"""
+Trabajo:
+Encontrar building_enemy
+Duplicarlo en el escenario en las posiciones
+50,20,0
+-100,500,0
+200,850,0
+-100,1000,0
+
+Agregar la colision a cTrav
+
+Verificar que funcione la colision con la bala
+
+"""
 
 class Starfox(ShowBase):
     def __init__(self):
@@ -31,6 +46,8 @@ class Starfox(ShowBase):
         self.player = self.scene.find("player")
         self.enemy   = self.scene.find("enemy1")
         self.player.setPythonTag("ObjectController" , Player(self.player) )
+        self.building_enemy = self.scene.find("building_enemy")
+
         #self.player.setPos(self.scene, 0,0,5)
         self.camera.setPos(self.render, 0,-50,100)
         self.taskMgr.add(self.update , "update")
@@ -64,9 +81,18 @@ class Starfox(ShowBase):
 
         self.player.setPos(self.rails,0,20,0)
 
+        self.createStaticEnemy(self.building_enemy ,  -100 ,500, 0 )
+        self.createStaticEnemy(self.building_enemy ,  200 , 850 , 0 )
+        self.createStaticEnemy(self.building_enemy ,  -100 , 1000 , 0 )
+
+    def createStaticEnemy(self , original, x, y,z):
+        be = original.copyTo(self.scene)
+        be.setPos(self.scene, x ,y ,z )
+        base.cTrav.addCollider(self.scene.find("building_enemy/collision**"), self.collisionHandlerEvent )
+
     def crash(self,evt):
-        a = 2
-        #print(f"{evt}")
+        #a = 2
+        print(f"{evt}")
 
     def update(self, task):
         extraX, extraZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() )
