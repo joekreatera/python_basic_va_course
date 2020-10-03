@@ -6,7 +6,7 @@ from Player import Player
 from InputManager import InputManager
 from Path import Path
 from Bullet import Bullet
-
+from panda3d.core import Vec3
 #loadPrcFileData("", "want-directtools #t")
 #loadPrcFileData("", "want-tk #t")
 
@@ -77,15 +77,16 @@ class Starfox(ShowBase):
         self.camera.setPos(self.rails , extraX, -10, extraZ)
         self.rails_y = self.rails_y + 20*globalClock.getDt()
 
-        if InputManager.isInputDown(InputManager.space):
-            b = Bullet(self.render, self.player.getPos(self.render) , self.enemy , base.cTrav, self.collisionHandlerEvent)
+        if self.player.getPythonTag("ObjectController").getShoot() :
+            v = self.render.getRelativeVector(self.rails,Vec3(0,1,0))
+            b = Bullet(self.render, self.player.getPos(self.render) , self.enemy , base.cTrav, self.collisionHandlerEvent, v)
 
         bullets = self.render.findAllMatches("bullet")
 
         for i in bullets:
             b = i.getPythonTag('ObjectController')
             b.update( globalClock.getDt())
-            
+
         return Task.cont
 fox = Starfox()
 fox.run()

@@ -6,15 +6,34 @@ class Player:
         self.gameObject = pandaNode
         self.px = 0
         self.pz = 0
+        self.prepareShoot = False
+        self.shoot  = False
+
+    def getShoot(self):
+        if( self.shoot):
+            self.shoot = False
+            return True
+        return False
 
     def update(self, worldRoot , dt):
         #print(f"updating {InputManager.arrowUp}")
+
+
         i = 0
         up = InputManager.isInputDown(InputManager.arrowUp)
         down =  InputManager.isInputDown(InputManager.arrowDown)
 
         right =  InputManager.isInputDown(InputManager.arrowRight)
         left =  InputManager.isInputDown(InputManager.arrowLeft)
+
+        space = InputManager.isInputDown(InputManager.space)
+        if( self.prepareShoot == True and space == False):
+            self.shoot = True
+            self.prepareShoot = False
+        if( self.prepareShoot == False and space == True):
+            self.shoot = False
+            self.prepareShoot = True
+
 
         vel = 20
         maxXPos = 24
