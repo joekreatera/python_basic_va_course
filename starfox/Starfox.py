@@ -4,6 +4,7 @@ from panda3d.core import CollisionTraverser, CollisionHandlerEvent
 from panda3d.core import loadPrcFileData
 from Player import Player
 from InputManager import InputManager
+from Path import Path
 
 loadPrcFileData("", "want-directtools #t")
 loadPrcFileData("", "want-tk #t")
@@ -21,26 +22,26 @@ class Starfox(ShowBase):
 
         base.messenger.toggleVerbose()
 
-        self.collisionHandlerEvent.addInPattern('from-%in')
+        #self.collisionHandlerEvent.addInPattern('from-%in')
         self.collisionHandlerEvent.addInPattern('into-%in')
         self.collisionHandlerEvent.addOutPattern('outof-%in')
 
 
         self.player = self.scene.find("player")
         self.player.setPythonTag("ObjectController" , Player(self.player) )
-        self.player.setPos(self.scene, 0,0,5)
-        self.camera.setPos(self.render, 0,-50,10)
+        #self.player.setPos(self.scene, 0,0,5)
+        self.camera.setPos(self.render, 0,-50,100)
         self.taskMgr.add(self.update , "update")
 
         self.accept('into-collision_enemy' , self.crash )
         self.accept('into-collision_player' , self.player.getPythonTag("ObjectController").collisionEnter )
-        self.accept('from-collision_player' , self.player.getPythonTag("ObjectController").collisionEnter )
         self.accept('into-collision_plane', self.crash )
 
         base.cTrav.addCollider( self.scene.find("player/collision**"), self.collisionHandlerEvent)
         base.cTrav.addCollider( self.scene.find("enemy1/collision**"), self.collisionHandlerEvent)
         base.cTrav.addCollider( self.scene.find("basePlane/collision**"), self.collisionHandlerEvent)
-        base.cTrav.showCollisions(self.render)
+
+        #base.cTrav.showCollisions(self.render)
 
         InputManager.initWith(self, [
             InputManager.arrowUp,
@@ -54,12 +55,24 @@ class Starfox(ShowBase):
             InputManager.keyV
             ] )
 
+        self.rails = self.scene.attachNewNode("rails")
+        self.rails.setPos(self.scene, 0,0,0)
+        self.rails_y = 0
+        self.player.reparentTo(self.rails)
+
+        self.player.setPos(self.rails,0,20,0)
+
     def crash(self,evt):
         print(f"{evt}")
 
     def update(self, task):
-        self.player.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() )
-        self.camera.lookAt(self.player)
+        extraX, extraZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() )
+        self.rails.setPos(self.scene,  Path.getXOfY(self.rails_y) , self.rails_y , 20 )
+        #self.camera.lookAt(self.player)
+        self.camera.setHpr( Path.getHeading(self.rails_y) , 0, 0 )
+        self.rails.setHpr( Path.getHeading(self.rails_y) , 0, 0 )
+        self.camera.setPos(self.rails , extraX, -10, extraZ)
+        self.rails_y = self.rails_y + 20*globalClock.getDt()
         return Task.cont
 fox = Starfox()
 fox.run()
