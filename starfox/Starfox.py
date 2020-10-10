@@ -9,8 +9,8 @@ from Path import Path
 from Bullet import Bullet
 from panda3d.core import Vec3
 
-loadPrcFileData("", "want-directtools #t")
-loadPrcFileData("", "want-tk #t")
+#loadPrcFileData("", "want-directtools #t")
+#loadPrcFileData("", "want-tk #t")
 
 """
 Trabajo:
@@ -88,7 +88,11 @@ class Starfox(ShowBase):
         self.createDynamicEnemy(self.enemy,-100,500,20)
 
     def createDynamicEnemy(self, original, x,y,z):
-        de = DynamicEnemy( Vec3(x,y,z), self.scene, original)
+        de = DynamicEnemy( Vec3(x,y,z), self.scene, original, self.player,
+                base.cTrav,
+                self.collisionHandlerEvent,
+                vel=10
+            )
 
     def createStaticEnemy(self , original, x, y,z):
         be = original.copyTo(self.scene)
@@ -117,6 +121,12 @@ class Starfox(ShowBase):
         for i in bullets:
             b = i.getPythonTag('ObjectController')
             b.update( globalClock.getDt())
+
+        enemies = self.scene.findAllMatches("dynamicEnemy")
+
+        for i in enemies:
+            e = i.getPythonTag('ObjectController')
+            e.update( globalClock.getDt())
 
         return Task.cont
 fox = Starfox()
