@@ -1,4 +1,5 @@
 from enum import Enum
+from panda3d.core import Vec3
 
 class ENEMY_TYPE(Enum):
     CHASER = 1
@@ -35,22 +36,56 @@ class DynamicEnemy:
         self.vel = vel
         self.dir = None
         self.distance = distanceToAttack
+        self.shootTimer = 3
+        self.shootTime  = 3
+        self.updatePositionTimer = 0.5
+        self.updatePositionTime = 0.5
+
 
     def setTargetPos(self, pos):
         self.targetPos = pos
 
     def update(self, dt):
+        self.gameObject.lookAt(self.player)
         posE = self.gameObject.getPos(self.world)
         posP = self.player.getPos(self.world)
 
         vec = posP - posE
         if( vec.length() < self.distance):
+            if( self.type == ENEMY_TYPE.CHASER):
+                self.targetPos = posP
             self.dir = (self.targetPos-posE)
             self.dir.normalize()
             self.state = ENEMY_STATE.CHASE
 
         if( self.type == ENEMY_TYPE.DEFAULT):
             self.updateABEnemy(dt)
+
+        if( self.type == ENEMY_TYPE.CHASER):
+            self.updateChaserEnemy(dt)
+
+        if(self.state == ENEMY_STATE.CHASE and self.shoot == ENEMY_SHOOTER.SHOOTER):
+            self.shootTimer = self.shootTimer - dt
+            if( self.shootTimer <= 0):
+                self.shootTimer = self.shootTime
+                return True
+            return False
+        return False
+
+    def updateChaserEnemy(self, dt):
+        if( self.state == ENEMY_STATE.CHASE):
+            self.updatePositionTimer = self.updatePositionTimer - dt
+            if(self.updatePositionTimer <= 0):
+                v = self.world.getRelativeVector(self.player,Vec3(0,1,0))
+                targetPos = self.player.getPos(self.world) - v*20
+                print(targetPos)
+                self.dir = (targetPos-self.gameObject.getPos(self.world))
+                self.dir.normalize()
+                self.updatePositionTimer = self.updatePositionTime
+
+            self.gameObject.setPos(self.world , self.gameObject.getPos(
+                                    self.world) + self.dir*self.vel*dt )
+
 
 
     def updateABEnemy(self, dt):

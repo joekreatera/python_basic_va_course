@@ -1,7 +1,8 @@
 from panda3d.core import Vec3
 
 class Bullet:
-    def __init__(self, world, pos , copyFrom , cTrav, collisionHandler, fwd):
+    def __init__(self, world, pos , copyFrom , cTrav, collisionHandler,
+        fwd):
         self.gameObject = copyFrom.copyTo(world)
         self.gameObject.setPos(world , pos)
         cTrav.addCollider( self.gameObject.find("**collision*"), collisionHandler )

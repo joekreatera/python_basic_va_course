@@ -88,6 +88,7 @@ class Starfox(ShowBase):
         self.createDynamicEnemy(self.enemy,-80,500,20, -200,500, 20)
 
     def createDynamicEnemy(self, original, ox,oy,oz , tx=0,ty=0,tz=0):
+        """
         de = DynamicEnemy( Vec3(ox,oy,oz), self.scene, original, self.player,
                 base.cTrav,
                 self.collisionHandlerEvent,
@@ -95,6 +96,14 @@ class Starfox(ShowBase):
                 distanceToAttack = 80
             )
         de.setTargetPos( Vec3(tx,ty,tz) )
+        """
+        de = DynamicEnemy( Vec3(ox,oy,oz), self.scene, original, self.player,
+                base.cTrav,
+                self.collisionHandlerEvent,
+                type = ENEMY_TYPE.CHASER,
+                vel=10,
+                distanceToAttack = 200
+            )
 
     def createStaticEnemy(self , original, x, y,z):
         be = original.copyTo(self.scene)
@@ -128,7 +137,14 @@ class Starfox(ShowBase):
 
         for i in enemies:
             e = i.getPythonTag('ObjectController')
-            e.update( globalClock.getDt())
+            s = e.update( globalClock.getDt())
+            if( s ):
+                dir = self.player.getPos(self.render) - i.getPos(self.render)
+                dir.normalize()
+                b = Bullet(self.render, i.getPos(self.render) ,
+                                    self.enemy , base.cTrav, self.collisionHandlerEvent, dir )
+
+
 
         return Task.cont
 fox = Starfox()
