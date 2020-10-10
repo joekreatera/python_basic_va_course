@@ -2,7 +2,7 @@ from panda3d.core import Vec3
 
 class Bullet:
     def __init__(self, world, pos , copyFrom , cTrav, collisionHandler,
-        fwd):
+        fwd, collisionMask):
         self.gameObject = copyFrom.copyTo(world)
         self.gameObject.setPos(world , pos)
         cTrav.addCollider( self.gameObject.find("**collision*"), collisionHandler )
@@ -10,6 +10,10 @@ class Bullet:
         self.gameObject.setPythonTag("ObjectController" , self )
         self.world = world
         self.gameObject.setName("bullet")
+
+        self.gameObject.find("**collision*").node().setIntoCollideMask(collisionMask)
+        self.gameObject.find("**collision*").node().setFromCollideMask(collisionMask)
+
         self.aliveTime = 0
 
     def update(self ,dt ):

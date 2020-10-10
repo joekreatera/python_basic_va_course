@@ -2,7 +2,7 @@ from InputManager import InputManager
 from random import random
 from math import copysign
 class Player:
-    def __init__(self, pandaNode):
+    def __init__(self, pandaNode , collisionMask = 0x01):
         self.gameObject = pandaNode
         self.px = 0
         self.pz = 0
@@ -71,5 +71,5 @@ class Player:
 
         return extraX, extraZ
 
-    def collisionEnter(self,evt):
+    def crash(self,evt):
         self.gameObject.setColor(random(), random(), random() , 1)

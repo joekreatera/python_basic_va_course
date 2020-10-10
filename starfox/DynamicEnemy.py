@@ -19,7 +19,7 @@ class ENEMY_SHOOTER(Enum):
 
 class DynamicEnemy:
     def __init__(self, pos, world, pandaObject, player, cTrav, colHandler,
-                            type=ENEMY_TYPE.DEFAULT, shoot=ENEMY_SHOOTER.SHOOTER, vel=0, distanceToAttack=100):
+                            type=ENEMY_TYPE.DEFAULT, shoot=ENEMY_SHOOTER.SHOOTER, vel=0, distanceToAttack=100, collisionMask=0x01):
         self.gameObject = pandaObject.copyTo(world)
         self.gameObject.setPos(pos)
         self.player= player
@@ -30,8 +30,8 @@ class DynamicEnemy:
         self.gameObject.setName("dynamicEnemy")
         self.gameObject.setPythonTag("ObjectController",self)
         cTrav.addCollider( self.gameObject.find("**collision*"), colHandler)
-        self.gameObject.find("**collision*").node().setIntoCollideMask(0x2)
-        self.gameObject.find("**collision*").node().setFromCollideMask(0x2)
+        self.gameObject.find("**collision*").node().setIntoCollideMask(collisionMask)
+        self.gameObject.find("**collision*").node().setFromCollideMask(collisionMask)
         self.targetPos = None
         self.vel = vel
         self.dir = None
@@ -93,5 +93,6 @@ class DynamicEnemy:
             self.gameObject.setPos(self.world , self.gameObject.getPos(
                                     self.world) + self.dir*self.vel*dt )
 
-    def crash(evt):
+    def crash(self,evt):
+        self.gameObject.removeNode()
         return 0

@@ -37,7 +37,7 @@ class Starfox(ShowBase):
         self.collisionHandlerEvent = CollisionHandlerEvent()
         base.enableParticles()
 
-        base.messenger.toggleVerbose()
+        #base.messenger.toggleVerbose()
 
         #self.collisionHandlerEvent.addInPattern('from-%in')
         self.collisionHandlerEvent.addInPattern('into-%in')
@@ -46,7 +46,7 @@ class Starfox(ShowBase):
 
         self.player = self.scene.find("player")
         self.enemy   = self.scene.find("enemy1")
-        self.player.setPythonTag("ObjectController" , Player(self.player) )
+        self.player.setPythonTag("ObjectController" , Player(self.player, collisionMask = 0x4) )
         self.building_enemy = self.scene.find("building_enemy")
 
         #self.player.setPos(self.scene, 0,0,5)
@@ -54,7 +54,7 @@ class Starfox(ShowBase):
         self.taskMgr.add(self.update , "update")
 
         self.accept('into-collision_enemy' , self.crash )
-        self.accept('into-collision_player' , self.player.getPythonTag("ObjectController").collisionEnter )
+        self.accept('into-collision_player' , self.crash )
         self.accept('into-collision_plane', self.crash )
 
         base.cTrav.addCollider( self.scene.find("player/collision**"), self.collisionHandlerEvent)
@@ -102,17 +102,30 @@ class Starfox(ShowBase):
                 self.collisionHandlerEvent,
                 type = ENEMY_TYPE.CHASER,
                 vel=35,
-                distanceToAttack = 2000
+                distanceToAttack = 2000,
+                collisionMask=0x3
             )
 
     def createStaticEnemy(self , original, x, y,z):
         be = original.copyTo(self.scene)
         be.setPos(self.scene, x ,y ,z )
         base.cTrav.addCollider(be.find("**collision**"), self.collisionHandlerEvent )
+        be.find("**collision*").node().setIntoCollideMask(0x3)
+        be.find("**collision*").node().setFromCollideMask(0x3)
+
 
     def crash(self,evt):
         #a = 2
-        print(f"{evt}")
+        objectInto = evt.getIntoNodePath().node().getParent(0).getPythonTag("ObjectController")
+        objectFrom = evt.getFromNodePath().node().getParent(0).getPythonTag("ObjectController")
+
+        if( objectInto != None):
+            objectInto.crash(objectFrom)
+
+        if( objectFrom != None):
+            objectFrom.crash(objectInto)
+
+        print(f"{objectInto} {objectFrom}")
 
     def update(self, task):
         extraX, extraZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() )
@@ -125,7 +138,8 @@ class Starfox(ShowBase):
 
         if self.player.getPythonTag("ObjectController").getShoot() :
             v = self.render.getRelativeVector(self.rails,Vec3(0,1,0))
-            b = Bullet(self.render, self.player.getPos(self.render) , self.enemy , base.cTrav, self.collisionHandlerEvent, v)
+            b = Bullet(self.render, self.player.getPos(self.render) , self.enemy ,
+                base.cTrav, self.collisionHandlerEvent, v, collisionMask=0x3)
 
         bullets = self.render.findAllMatches("bullet")
 
@@ -142,7 +156,9 @@ class Starfox(ShowBase):
                 dir = self.player.getPos(self.render) - i.getPos(self.render)
                 dir.normalize()
                 b = Bullet(self.render, i.getPos(self.render) ,
-                                    self.enemy , base.cTrav, self.collisionHandlerEvent, dir )
+                                    self.enemy , base.cTrav,
+                                    self.collisionHandlerEvent, dir ,
+                                    collisionMask=0xC)
 
 
 
