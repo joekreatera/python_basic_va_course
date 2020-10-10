@@ -85,14 +85,14 @@ class Starfox(ShowBase):
         #self.createStaticEnemy(self.building_enemy ,  -100 ,500, 0 )
         self.createStaticEnemy(self.building_enemy ,  200 , 850 , 0 )
         self.createStaticEnemy(self.building_enemy ,  -100 , 1000 , 0 )
-        self.createDynamicEnemy(self.enemy,-100,500,20, 100,500, 20)
+        self.createDynamicEnemy(self.enemy,-80,500,20, -200,500, 20)
 
     def createDynamicEnemy(self, original, ox,oy,oz , tx=0,ty=0,tz=0):
         de = DynamicEnemy( Vec3(ox,oy,oz), self.scene, original, self.player,
                 base.cTrav,
                 self.collisionHandlerEvent,
-                vel=10,
-                distanceToAttack = 50
+                vel=5,
+                distanceToAttack = 80
             )
         de.setTargetPos( Vec3(tx,ty,tz) )
 

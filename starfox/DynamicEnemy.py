@@ -45,7 +45,8 @@ class DynamicEnemy:
 
         vec = posP - posE
         if( vec.length() < self.distance):
-            self.dir = (self.targetPos-posE).normalize()
+            self.dir = (self.targetPos-posE)
+            self.dir.normalize()
             self.state = ENEMY_STATE.CHASE
 
         if( self.type == ENEMY_TYPE.DEFAULT):
@@ -54,8 +55,8 @@ class DynamicEnemy:
 
     def updateABEnemy(self, dt):
         if( self.state == ENEMY_STATE.CHASE):
-            print(self.dir)
-            self.gameObject.setPos(self.world , self.gameObject.getPos(self.world) + self.dir*self.vel*dt )
+            self.gameObject.setPos(self.world , self.gameObject.getPos(
+                                    self.world) + self.dir*self.vel*dt )
 
     def crash(evt):
         return 0
