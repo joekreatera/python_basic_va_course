@@ -101,8 +101,8 @@ class Starfox(ShowBase):
                 base.cTrav,
                 self.collisionHandlerEvent,
                 type = ENEMY_TYPE.CHASER,
-                vel=10,
-                distanceToAttack = 200
+                vel=35,
+                distanceToAttack = 2000
             )
 
     def createStaticEnemy(self , original, x, y,z):
@@ -137,7 +137,7 @@ class Starfox(ShowBase):
 
         for i in enemies:
             e = i.getPythonTag('ObjectController')
-            s = e.update( globalClock.getDt())
+            s = e.update( globalClock.getDt(), self.rails)
             if( s ):
                 dir = self.player.getPos(self.render) - i.getPos(self.render)
                 dir.normalize()

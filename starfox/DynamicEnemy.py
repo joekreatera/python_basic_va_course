@@ -45,13 +45,13 @@ class DynamicEnemy:
     def setTargetPos(self, pos):
         self.targetPos = pos
 
-    def update(self, dt):
+    def update(self, dt, playerParent):
         self.gameObject.lookAt(self.player)
         posE = self.gameObject.getPos(self.world)
         posP = self.player.getPos(self.world)
 
         vec = posP - posE
-        if( vec.length() < self.distance):
+        if(self.state == ENEMY_STATE.IDLE and vec.length() < self.distance):
             if( self.type == ENEMY_TYPE.CHASER):
                 self.targetPos = posP
             self.dir = (self.targetPos-posE)
@@ -62,7 +62,7 @@ class DynamicEnemy:
             self.updateABEnemy(dt)
 
         if( self.type == ENEMY_TYPE.CHASER):
-            self.updateChaserEnemy(dt)
+            self.updateChaserEnemy(dt , playerParent)
 
         if(self.state == ENEMY_STATE.CHASE and self.shoot == ENEMY_SHOOTER.SHOOTER):
             self.shootTimer = self.shootTimer - dt
@@ -72,19 +72,19 @@ class DynamicEnemy:
             return False
         return False
 
-    def updateChaserEnemy(self, dt):
+    def updateChaserEnemy(self, dt , playerParent):
         if( self.state == ENEMY_STATE.CHASE):
             self.updatePositionTimer = self.updatePositionTimer - dt
             if(self.updatePositionTimer <= 0):
                 v = self.world.getRelativeVector(self.player,Vec3(0,1,0))
-                targetPos = self.player.getPos(self.world) - v*20
-                print(targetPos)
+                targetPos = self.player.getPos(self.world) + v*60
+
                 self.dir = (targetPos-self.gameObject.getPos(self.world))
                 self.dir.normalize()
                 self.updatePositionTimer = self.updatePositionTime
 
-            self.gameObject.setPos(self.world , self.gameObject.getPos(
-                                    self.world) + self.dir*self.vel*dt )
+            self.gameObject.setPos(self.world,
+                                self.gameObject.getPos(self.world) + self.dir*self.vel*dt )
 
 
 
