@@ -3,7 +3,7 @@ from direct.task import Task
 from panda3d.core import CollisionTraverser, CollisionHandlerEvent
 from panda3d.core import loadPrcFileData
 from Player import Player
-from DynamicEnemy import DynamicEnemy
+from DynamicEnemy import *
 from InputManager import InputManager
 from Path import Path
 from Bullet import Bullet
@@ -82,13 +82,13 @@ class Starfox(ShowBase):
 
         self.player.setPos(self.rails,0,20,0)
 
-        self.createStaticEnemy(self.building_enemy ,  -100 ,500, 0 )
+        #self.createStaticEnemy(self.building_enemy ,  -100 ,500, 0 )
         self.createStaticEnemy(self.building_enemy ,  200 , 850 , 0 )
         self.createStaticEnemy(self.building_enemy ,  -100 , 1000 , 0 )
         self.createDynamicEnemy(self.enemy,-100,500,20)
 
     def createDynamicEnemy(self, original, x,y,z):
-        de = DynamicEnemy( Vec3(x,y,z), self.scene, original, 0 )
+        de = DynamicEnemy( Vec3(x,y,z), self.scene, original)
 
     def createStaticEnemy(self , original, x, y,z):
         be = original.copyTo(self.scene)
