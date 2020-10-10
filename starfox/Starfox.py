@@ -82,9 +82,9 @@ class Starfox(ShowBase):
 
         self.player.setPos(self.rails,0,20,0)
 
-        #self.createStaticEnemy(self.building_enemy ,  -100 ,500, 0 )
-        #self.createStaticEnemy(self.building_enemy ,  200 , 850 , 0 )
-        #self.createStaticEnemy(self.building_enemy ,  -100 , 1000 , 0 )
+        self.createStaticEnemy(self.building_enemy ,  -100 ,500, 0 )
+        self.createStaticEnemy(self.building_enemy ,  200 , 850 , 0 )
+        self.createStaticEnemy(self.building_enemy ,  -100 , 1000 , 0 )
         self.createDynamicEnemy(self.enemy,-100,500,20)
 
     def createDynamicEnemy(self, original, x,y,z):
@@ -93,7 +93,7 @@ class Starfox(ShowBase):
     def createStaticEnemy(self , original, x, y,z):
         be = original.copyTo(self.scene)
         be.setPos(self.scene, x ,y ,z )
-        base.cTrav.addCollider(be.find("building_enemy/collision**"), self.collisionHandlerEvent )
+        base.cTrav.addCollider(be.find("**collision**"), self.collisionHandlerEvent )
 
     def crash(self,evt):
         #a = 2
