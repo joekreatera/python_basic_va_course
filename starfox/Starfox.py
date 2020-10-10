@@ -81,14 +81,14 @@ class Starfox(ShowBase):
 
         self.player.setPos(self.rails,0,20,0)
 
-        self.createStaticEnemy(self.building_enemy ,  -100 ,500, 0 )
-        self.createStaticEnemy(self.building_enemy ,  200 , 850 , 0 )
-        self.createStaticEnemy(self.building_enemy ,  -100 , 1000 , 0 )
+        #self.createStaticEnemy(self.building_enemy ,  -100 ,500, 0 )
+        #self.createStaticEnemy(self.building_enemy ,  200 , 850 , 0 )
+        #self.createStaticEnemy(self.building_enemy ,  -100 , 1000 , 0 )
 
     def createStaticEnemy(self , original, x, y,z):
         be = original.copyTo(self.scene)
         be.setPos(self.scene, x ,y ,z )
-        base.cTrav.addCollider(self.scene.find("building_enemy/collision**"), self.collisionHandlerEvent )
+        base.cTrav.addCollider(be.find("building_enemy/collision**"), self.collisionHandlerEvent )
 
     def crash(self,evt):
         #a = 2
